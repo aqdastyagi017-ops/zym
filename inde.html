@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bull Pen Gym — Edmonton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1E1D1B;
+    --bg-alt:#262420;
+    --bg-card:#2B2925;
+    --ink:#EDEAE2;
+    --ink-dim:#A39C8E;
+    --rust:#A63D2F;
+    --rust-bright:#C24B3B;
+    --amber:#D98E2B;
+    --steel:#4A4742;
+    --steel-line: rgba(163,156,142,0.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+  h1,h2,h3,.display{
+    font-family:'Bebas Neue',sans-serif;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    font-weight:400;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;}
+  ::selection{background:var(--rust);color:var(--ink);}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:3px;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(30,29,27,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--steel-line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.44rem;letter-spacing:0.03em;
+    display:flex;align-items:center;gap:12px;
+    white-space:nowrap;
+  }
+  .logo-mark{flex-shrink:0;}
+  .logo small{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:0.56rem;
+    letter-spacing:0.22em;color:var(--ink-dim);font-weight:500;margin-top:1px;
+  }
+  .nav-links{display:flex;gap:32px;font-size:0.92rem;font-weight:600;letter-spacing:0.02em;}
+  .nav-links a{color:var(--ink-dim);transition:color .2s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-actions{display:flex;align-items:center;gap:18px;}
+  .nav-login{
+    color:var(--ink-dim);font-weight:600;font-size:0.88rem;letter-spacing:0.02em;
+    transition:color .2s;
+  }
+  .nav-login:hover{color:var(--ink);}
+  .nav-cta{
+    background:var(--rust);color:var(--ink);
+    padding:10px 20px;border-radius:2px;font-weight:700;
+    font-size:0.88rem;letter-spacing:0.02em;
+    transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--rust-bright);}
+  .nav-divider{width:1px;height:22px;background:var(--steel-line);}
+  .nav-phone{
+    color:var(--ink-dim);font-size:0.85rem;font-family:'JetBrains Mono',monospace;
+    transition:color .2s;
+  }
+  .nav-phone:hover{color:var(--amber);}
+  .burger{display:none;background:none;border:none;color:var(--ink);font-size:1.6rem;cursor:pointer;}
+  @media (max-width:900px){.nav-phone{display:none;}}
+  @media (max-width:520px){.nav-login{display:none;}}
+
+  /* ---------- PLATE RAIL (signature scroll element) ---------- */
+  .plate-rail{
+    position:fixed;left:20px;top:50%;transform:translateY(-50%);
+    z-index:40;display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .plate-rail .bar{
+    width:3px;height:220px;background:var(--steel-line);position:relative;border-radius:2px;overflow:hidden;
+  }
+  .plate-rail .bar-fill{
+    position:absolute;bottom:0;left:0;width:100%;background:linear-gradient(to top, var(--rust), var(--amber));
+    height:0%;transition:height .1s linear;
+  }
+  .plate-rail .label{
+    font-size:0.62rem;color:var(--ink-dim);letter-spacing:0.12em;writing-mode:vertical-rl;
+    font-family:'JetBrains Mono',monospace;
+  }
+  @media (max-width:900px){.plate-rail{display:none;}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:110px 32px 100px;
+    background:
+      radial-gradient(ellipse 900px 500px at 80% -10%, rgba(166,61,47,0.25), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -10% 110%, rgba(217,142,43,0.12), transparent 60%),
+      var(--bg);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 38px, rgba(255,255,255,0.015) 39px),
+      repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(255,255,255,0.015) 39px);
+    pointer-events:none;
+  }
+  .hero-inner{
+    max-width:1180px;margin:0 auto;position:relative;z-index:2;
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:0.78rem;letter-spacing:0.16em;
+    color:var(--amber);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:24px;height:2px;background:var(--amber);}
+  .hero h1{
+    font-size:clamp(3rem, 6.4vw, 5.6rem);line-height:0.98;color:var(--ink);
+  }
+  .hero h1 .accent{color:var(--rust-bright);}
+  .hero p.sub{
+    margin-top:24px;font-size:1.12rem;color:var(--ink-dim);max-width:480px;
+  }
+  .hero-actions{margin-top:36px;display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;padding:15px 28px;font-weight:700;font-size:0.92rem;
+    letter-spacing:0.03em;border-radius:2px;transition:all .2s;
+  }
+  .btn-primary{background:var(--rust);color:var(--ink);}
+  .btn-primary:hover{background:var(--rust-bright);transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--steel-line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--amber);color:var(--amber);}
+
+  /* barbell signature graphic */
+  .barbell-wrap{display:flex;justify-content:center;align-items:center;}
+  .barbell-wrap svg{width:100%;max-width:380px;}
+  .plate-tag{font-family:'JetBrains Mono',monospace;font-size:0.62rem;fill:var(--ink-dim);}
+
+  /* ---------- PHILOSOPHY STRIP ---------- */
+  .strip{
+    border-top:1px solid var(--steel-line);border-bottom:1px solid var(--steel-line);
+    background:var(--bg-alt);padding:56px 32px;
+  }
+  .strip-inner{
+    max-width:1180px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start;
+  }
+  .strip .num{font-family:'JetBrains Mono',monospace;color:var(--rust-bright);font-size:1rem;font-weight:700;}
+  .strip p{font-size:1.3rem;color:var(--ink);max-width:760px;font-weight:500;}
+  .strip p em{color:var(--amber);font-style:normal;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:100px 32px;}
+  .sec-head{margin-bottom:56px;max-width:640px;}
+  .sec-head .eyebrow{margin-bottom:14px;}
+  .sec-head h2{font-size:clamp(2.1rem,4vw,3rem);color:var(--ink);}
+  .sec-head p{color:var(--ink-dim);margin-top:14px;font-size:1.02rem;}
+
+  /* ---------- PROGRAMS (weighted progression) ---------- */
+  .programs-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--steel-line);border:1px solid var(--steel-line);
+  }
+  .program-card{
+    background:var(--bg);padding:36px 28px;position:relative;
+    transition:background .25s;
+  }
+  .program-card:hover{background:var(--bg-card);}
+  .plate-icon{
+    width:44px;height:44px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:22px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.72rem;
+  }
+  .program-card h3{font-size:1.2rem;color:var(--ink);margin-bottom:10px;letter-spacing:0.01em;}
+  .program-card p{color:var(--ink-dim);font-size:0.92rem;}
+  .load-note{
+    margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--ink-dim);
+    letter-spacing:0.08em;padding-top:14px;border-top:1px solid var(--steel-line);
+  }
+  @media (max-width:900px){.programs-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.programs-grid{grid-template-columns:1fr;}}
+
+  /* ---------- STATS ---------- */
+  .stats{
+    background:var(--bg-alt);border-top:1px solid var(--steel-line);border-bottom:1px solid var(--steel-line);
+  }
+  .stats-inner{
+    max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);
+  }
+  .stat{padding:48px 32px;border-left:1px solid var(--steel-line);}
+  .stat:first-child{border-left:none;}
+  .stat .num{
+    font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:var(--amber);
+  }
+  .stat .lbl{color:var(--ink-dim);font-size:0.85rem;margin-top:6px;letter-spacing:0.03em;}
+  @media (max-width:800px){.stats-inner{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(3){border-left:none;}}
+
+  /* ---------- FACILITY ---------- */
+  .facility-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  }
+  .fac-block{
+    aspect-ratio:1;position:relative;overflow:hidden;
+    display:flex;align-items:flex-end;padding:20px;
+  }
+  .fac-block span{
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-dim);
+    letter-spacing:0.05em;position:relative;z-index:2;
+  }
+  .fac-block::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.55), transparent 60%);}
+  @media (max-width:700px){.facility-grid{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---------- HOURS ---------- */
+  .hours-wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px;}
+  .hours-table{width:100%;border-collapse:collapse;}
+  .hours-table tr{border-bottom:1px solid var(--steel-line);}
+  .hours-table td{padding:16px 0;font-size:0.98rem;}
+  .hours-table td:first-child{color:var(--ink-dim);letter-spacing:0.02em;}
+  .hours-table td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;color:var(--ink);}
+  .hours-note{
+    margin-top:28px;padding:20px;background:var(--bg-alt);border-left:2px solid var(--amber);font-size:0.9rem;color:var(--ink-dim);
+  }
+  @media (max-width:800px){.hours-wrap{grid-template-columns:1fr;gap:36px;}}
+
+  /* ---------- CONTACT / LOCATION ---------- */
+  .contact{background:var(--bg-alt);border-top:1px solid var(--steel-line);}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+  .info-row{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--steel-line);}
+  .info-row:last-child{border-bottom:none;}
+  .info-row .icon{color:var(--amber);flex-shrink:0;margin-top:2px;}
+  .info-row .lbl{font-size:0.75rem;color:var(--ink-dim);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+  .info-row .val{font-size:1.05rem;color:var(--ink);}
+  .map-block{
+    background:var(--bg);border:1px solid var(--steel-line);aspect-ratio:4/3;
+    position:relative;overflow:hidden;
+  }
+  .map-block::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 24px, var(--steel-line) 25px),
+      repeating-linear-gradient(90deg, transparent, transparent 24px, var(--steel-line) 25px);
+  }
+  .pin{position:absolute;top:50%;left:52%;transform:translate(-50%,-100%);}
+  @media (max-width:800px){.contact-grid{grid-template-columns:1fr;}}
+
+  /* ---------- FOOTER CTA ---------- */
+  .final-cta{
+    text-align:center;padding:120px 32px;
+    background:linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+  }
+  .final-cta h2{font-size:clamp(2.4rem,6vw,4.4rem);color:var(--ink);line-height:1.02;}
+  .final-cta h2 .accent{color:var(--rust-bright);}
+  .final-cta p{color:var(--ink-dim);margin-top:20px;font-size:1.05rem;}
+  .final-cta .btn{margin-top:32px;font-size:1rem;padding:18px 36px;}
+
+  footer{
+    border-top:1px solid var(--steel-line);padding:32px;text-align:center;
+    color:var(--ink-dim);font-size:0.82rem;
+  }
+
+  @media (max-width:900px){
+    .hero-inner{grid-template-columns:1fr;}
+    .barbell-wrap{order:-1;max-width:280px;margin:0 auto 24px;}
+    .nav-links{display:none;}
+  }
+
+  /* ---------- AUTH MODAL ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,14,13,0.72);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--bg-alt);border:1px solid var(--steel-line);
+    width:100%;max-width:400px;padding:36px;position:relative;
+  }
+  .modal-close{
+    position:absolute;top:18px;right:18px;background:none;border:none;
+    color:var(--ink-dim);font-size:1.3rem;cursor:pointer;line-height:1;
+  }
+  .modal-close:hover{color:var(--ink);}
+  .modal-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--steel-line);}
+  .modal-tab{
+    flex:1;text-align:center;padding:12px 0;font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;letter-spacing:0.08em;color:var(--ink-dim);background:none;border:none;
+    cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;
+  }
+  .modal-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+  .modal-box h3{font-size:1.7rem;color:var(--ink);margin-bottom:6px;}
+  .modal-box .modal-sub{color:var(--ink-dim);font-size:0.88rem;margin-bottom:24px;}
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+    letter-spacing:0.08em;color:var(--ink-dim);margin-bottom:8px;text-transform:uppercase;
+  }
+  .field input{
+    width:100%;background:var(--bg);border:1px solid var(--steel-line);
+    color:var(--ink);padding:12px 14px;font-family:'Inter',sans-serif;font-size:0.95rem;
+    border-radius:2px;transition:border-color .2s;
+  }
+  .field input:focus{border-color:var(--amber);outline:none;}
+  .modal-submit{
+    width:100%;background:var(--rust);color:var(--ink);border:none;padding:14px;
+    font-weight:700;font-size:0.92rem;letter-spacing:0.03em;border-radius:2px;
+    cursor:pointer;margin-top:8px;transition:background .2s;
+  }
+  .modal-submit:hover{background:var(--rust-bright);}
+  .modal-panel{display:none;}
+  .modal-panel.active{display:block;}
+  .modal-foot{margin-top:18px;font-size:0.82rem;color:var(--ink-dim);text-align:center;}
+  .modal-foot a{color:var(--amber);}
+</style>
+</head>
+<body>
+
+<div class="plate-rail" aria-hidden="true">
+  <span class="label">LOAD</span>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg class="logo-mark" width="38" height="38" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="22" cy="22" r="21" fill="none" stroke="#4A4742" stroke-width="1.5"/>
+        <path d="M12 17 C12 10, 17 6, 22 12 C27 6, 32 10, 32 17" fill="none" stroke="#D98E2B" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="22" cy="25" r="8.5" fill="none" stroke="#A63D2F" stroke-width="2.6"/>
+        <circle cx="22" cy="25" r="2.4" fill="#EDEAE2"/>
+      </svg>
+      <span>BULL&nbsp;PEN<small>EDMONTON&nbsp;&middot;&nbsp;GYM</small></span>
+    </div>
+    <div class="nav-links">
+      <a href="#programs">Programs</a>
+      <a href="#facility">Facility</a>
+      <a href="#hours">Hours</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:+17804848256">(780) 484-8256</a>
+      <div class="nav-divider"></div>
+      <a class="nav-login" href="#" data-auth="login">Log in</a>
+      <a class="nav-cta" href="#" data-auth="signup">Sign up</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Edmonton, AB &mdash; Est. Strength</div>
+      <h1>Get in the <span class="accent">pen.</span><br>Put in the work.</h1>
+      <p class="sub">No mirrors to pose in. No music videos playing on the squat rack. Bull Pen is where Edmonton comes to load the bar, chase the number, and leave nothing on the platform.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#contact">Book a free session</a>
+        <a class="btn btn-ghost" href="#programs">See the programs</a>
+      </div>
+    </div>
+    <div class="barbell-wrap">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="100" x2="380" y2="100" stroke="#4A4742" stroke-width="6"/>
+        <rect x="40" y="55" width="16" height="90" rx="3" fill="#A63D2F"/>
+        <rect x="60" y="65" width="12" height="70" rx="3" fill="#2B2925" stroke="#4A4742"/>
+        <rect x="340" y="55" width="16" height="90" rx="3" fill="#A63D2F"/>
+        <rect x="322" y="65" width="12" height="70" rx="3" fill="#2B2925" stroke="#4A4742"/>
+        <circle cx="200" cy="100" r="46" fill="none" stroke="#D98E2B" stroke-width="3"/>
+        <text x="200" y="106" text-anchor="middle" class="plate-tag" font-size="13" fill="#EDEAE2" font-family="JetBrains Mono, monospace" font-weight="700">45</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-inner">
+    <div class="num mono">01</div>
+    <p>Bull Pen isn't a fitness studio. It's a <em>training facility</em> &mdash; built for people who track numbers, not likes. Chalk on the floor is a feature.</p>
+  </div>
+</div>
+
+<section id="programs">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Programs, by load</div>
+      <h2>Pick your weight class</h2>
+      <p>Every program is ordered by how heavy it gets &mdash; from your first session to your next competition.</p>
+    </div>
+  </div>
+  <div class="programs-grid">
+    <div class="program-card">
+      <div class="plate-icon" style="background:rgba(217,142,43,0.15); color:#D98E2B; border:2px solid #D98E2B;">2.5</div>
+      <h3>Open Gym</h3>
+      <p>Full access to the floor. Come in, warm up, and run your own session at your own pace.</p>
+      <div class="load-note">24/7 KEY-FOB ACCESS</div>
+    </div>
+    <div class="program-card">
+      <div class="plate-icon" style="background:rgba(217,142,43,0.15); color:#D98E2B; border:2px solid #D98E2B;">10</div>
+      <h3>Strength &amp; Conditioning</h3>
+      <p>Coached group sessions built around squat, bench, and pull &mdash; four days a week, no fluff between sets.</p>
+      <div class="load-note">SMALL GROUPS, 6 MAX</div>
+    </div>
+    <div class="program-card">
+      <div class="plate-icon" style="background:rgba(166,61,47,0.18); color:#C24B3B; border:2px solid #A63D2F;">25</div>
+      <h3>Personal Training</h3>
+      <p>One-on-one coaching with a program built around your lifts, your recovery, and your competition calendar.</p>
+      <div class="load-note">1:1, BY APPOINTMENT</div>
+    </div>
+    <div class="program-card">
+      <div class="plate-icon" style="background:rgba(166,61,47,0.18); color:#C24B3B; border:2px solid #A63D2F;">45</div>
+      <h3>Powerlifting Team</h3>
+      <p>Meet-focused programming for lifters chasing totals. Peaking blocks, meet-day handling, the works.</p>
+      <div class="load-note">BY TRYOUT</div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="num mono">24/7</div><div class="lbl">Floor access</div></div>
+    <div class="stat"><div class="num mono">8,400</div><div class="lbl">Sq. ft of platform</div></div>
+    <div class="stat"><div class="num mono">14</div><div class="lbl">Squat &amp; power racks</div></div>
+    <div class="stat"><div class="num mono">180+</div><div class="lbl">Active members</div></div>
+  </div>
+</div>
+
+<section id="facility">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The floor</div>
+      <h2>Built for iron, not selfies</h2>
+      <p>A walk-through of what you're actually training on.</p>
+    </div>
+  </div>
+  <div class="facility-grid">
+    <div class="fac-block" style="background:linear-gradient(135deg,#3a352f,#242220);"><span>POWER RACK ROW &mdash; 8 STATIONS</span></div>
+    <div class="fac-block" style="background:linear-gradient(135deg,#332a24,#221e1a);"><span>PLATFORM DECK &mdash; COMPETITION SPEC</span></div>
+    <div class="fac-block" style="background:linear-gradient(135deg,#2e2f2b,#1e1f1c);"><span>STRONGMAN &amp; SLED BAY</span></div>
+    <div class="fac-block" style="background:linear-gradient(135deg,#3a2b26,#241d1a);"><span>DUMBBELLS, 5&ndash;150LB</span></div>
+    <div class="fac-block" style="background:linear-gradient(135deg,#2c2a26,#1c1b19);"><span>CARDIO &amp; CONDITIONING BAY</span></div>
+    <div class="fac-block" style="background:linear-gradient(135deg,#332f28,#201f1b);"><span>RECOVERY &amp; STRETCH ZONE</span></div>
+  </div>
+</section>
+
+<section id="hours">
+  <div class="wrap hours-wrap">
+    <div>
+      <div class="sec-head" style="margin-bottom:32px;">
+        <div class="eyebrow">Hours</div>
+        <h2>The pen never locks</h2>
+      </div>
+      <table class="hours-table">
+        <tr><td>Members (key-fob)</td><td>24 hours / 7 days</td></tr>
+        <tr><td>Staffed &amp; coaching hours</td><td>6:00 AM &ndash; 9:00 PM</td></tr>
+        <tr><td>Front desk / sign-ups</td><td>9:00 AM &ndash; 7:00 PM</td></tr>
+        <tr><td>Statutory holidays</td><td>Key-fob only</td></tr>
+      </table>
+      <div class="hours-note">First session is free &mdash; walk in during staffed hours or book below.</div>
+    </div>
+    <div>
+      <div class="sec-head" style="margin-bottom:32px;">
+        <div class="eyebrow">Class blocks</div>
+        <h2>Coached sessions</h2>
+      </div>
+      <table class="hours-table">
+        <tr><td>Strength &amp; Conditioning</td><td>Mon / Wed / Fri &mdash; 6PM</td></tr>
+        <tr><td>Powerlifting Team</td><td>Tue / Thu &mdash; 7PM</td></tr>
+        <tr><td>Beginner Barbell</td><td>Sat &mdash; 10AM</td></tr>
+        <tr><td>Open Platform Sunday</td><td>Sun &mdash; all day</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap contact-grid">
+    <div>
+      <div class="sec-head" style="margin-bottom:24px;">
+        <div class="eyebrow">Get in</div>
+        <h2>Come see the floor</h2>
+        <p>No hard sell. Show up, we'll walk you through it and get you under the bar.</p>
+      </div>
+      <div class="info-row">
+        <div class="icon">&#9679;</div>
+        <div><div class="lbl">Address</div><div class="val">10121 159 St NW, Edmonton, AB T5P 3A1, Canada</div></div>
+      </div>
+      <div class="info-row">
+        <div class="icon">&#9679;</div>
+        <div><div class="lbl">Phone</div><div class="val"><a href="tel:+17804848256">+1 (780) 484-8256</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="icon">&#9679;</div>
+        <div><div class="lbl">Access</div><div class="val">24/7 for members &middot; staffed 6AM&ndash;9PM</div></div>
+      </div>
+    </div>
+    <div class="map-block" aria-hidden="true">
+      <svg class="pin" width="30" height="40" viewBox="0 0 30 40">
+        <path d="M15 0C6.7 0 0 6.7 0 15c0 10 15 25 15 25s15-15 15-25C30 6.7 23.3 0 15 0z" fill="#A63D2F"/>
+        <circle cx="15" cy="15" r="6" fill="#EDEAE2"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2>Stop scrolling.<br>Start <span class="accent">loading.</span></h2>
+  <p>Your first session in the pen is on us.</p>
+  <a class="btn btn-primary" href="tel:+17804848256">Call (780) 484-8256</a>
+</div>
+
+<footer>
+  &copy; 2026 Bull Pen Gym &middot; 10121 159 St NW, Edmonton, AB &middot; Demo site
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="login">Log in</button>
+      <button class="modal-tab" data-tab="signup">Sign up</button>
+    </div>
+
+    <div class="modal-panel active" data-panel="login">
+      <h3>Welcome back</h3>
+      <p class="modal-sub">Log in to book classes and manage your membership.</p>
+      <div class="field"><label for="li-email">Email</label><input id="li-email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label for="li-pass">Password</label><input id="li-pass" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"></div>
+      <button class="modal-submit">Log in</button>
+      <div class="modal-foot">New here? <a href="#" data-tab-link="signup">Create an account</a></div>
+    </div>
+
+    <div class="modal-panel" data-panel="signup">
+      <h3>Join the pen</h3>
+      <p class="modal-sub">First session is free. Create an account to lock it in.</p>
+      <div class="field"><label for="su-name">Full name</label><input id="su-name" type="text" placeholder="Your name"></div>
+      <div class="field"><label for="su-email">Email</label><input id="su-email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label for="su-pass">Password</label><input id="su-pass" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"></div>
+      <button class="modal-submit">Create account</button>
+      <div class="modal-foot">Already a member? <a href="#" data-tab-link="login">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const barFill = document.getElementById('barFill');
+  function updateFill(){
+    const scrolled = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? Math.min(100, (scrolled / max) * 100) : 0;
+    barFill.style.height = pct + '%';
+  }
+  window.addEventListener('scroll', updateFill, {passive:true});
+  updateFill();
+
+  const modal = document.getElementById('authModal');
+  const tabs = document.querySelectorAll('.modal-tab');
+  const panels = document.querySelectorAll('.modal-panel');
+
+  function showTab(name){
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    panels.forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+  }
+  function openModal(name){
+    showTab(name);
+    modal.classList.add('open');
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+  }
+
+  document.querySelectorAll('[data-auth]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); openModal(el.dataset.auth); });
+  });
+  document.querySelectorAll('[data-tab-link]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); showTab(el.dataset.tabLink); });
+  });
+  tabs.forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>
